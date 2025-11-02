@@ -4,7 +4,7 @@ import com.springboot.school_management.entity.Course;
 import com.springboot.school_management.entity.Instructor;
 import com.springboot.school_management.exception.ResourceNotFoundException;
 import com.springboot.school_management.payload.CourseDto;
-import com.springboot.school_management.payload.CreateCourseRequest;
+import com.springboot.school_management.payload.CourseRequest;
 import com.springboot.school_management.repository.CourseRepository;
 import com.springboot.school_management.repository.InstructorRepository;
 import com.springboot.school_management.repository.StudentRepository;
@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
 
 
 @Service
@@ -70,7 +71,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public CourseDto createCourse(CreateCourseRequest request, Long instructorId) {
+    public CourseDto createCourse(CourseRequest request, Long instructorId) {
         Instructor instructor = instructorRepository.findById(instructorId).orElseThrow(
                 () -> new RuntimeException("Instructor Not Found")
         );
@@ -90,7 +91,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public CourseDto updateCourse(Long courseId, Long instructorId, CreateCourseRequest request) {
+    public CourseDto updateCourse(Long courseId, Long instructorId, CourseRequest request) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
                 () -> new ResourceNotFoundException("Course", "id", courseId)
@@ -111,12 +112,29 @@ public class CourseServiceImpl implements CourseService {
         return mapToDto(updatedCourse);
     }
 
+    @Override
+    public CourseDto patchCourse(Long courseId, Long instructorId, CourseRequest request) {
 
-    // ✅ الـ mapping بقى بسيط جداً
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new ResourceNotFoundException("Course", "id", courseId)
+        );
+
+        if (!course.getInstructor().getId().equals(instructorId)){
+            throw new AccessDeniedException("You are not authorized to update this course");
+        }
+
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        modelMapper.map(request,course);
+
+        Course updatedCourse = courseRepository.save(course);
+
+        return mapToDto(updatedCourse);
+    }
+
+
     private CourseDto mapToDto(Course course) {
         CourseDto dto = modelMapper.map(course, CourseDto.class);
 
-        // Custom mappings للحاجات اللي مش automatic
         dto.setInstructorId(course.getInstructor().getId());
         dto.setInstructorName(course.getInstructor().getUsername());
         dto.setEnrolledStudentsCount(course.getEnrolledStudents().size());

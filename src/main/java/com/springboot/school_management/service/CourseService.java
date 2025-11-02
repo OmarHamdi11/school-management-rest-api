@@ -1,8 +1,10 @@
 package com.springboot.school_management.service;
 
 import com.springboot.school_management.payload.CourseDto;
-import com.springboot.school_management.payload.CreateCourseRequest;
+import com.springboot.school_management.payload.CourseRequest;
 import com.springboot.school_management.response.PageResponse;
+
+import java.util.Map;
 
 public interface CourseService {
 
@@ -10,8 +12,10 @@ public interface CourseService {
 
     CourseDto getCourseById(Long id);
 
-    CourseDto createCourse(CreateCourseRequest request, Long instructorId);
+    CourseDto createCourse(CourseRequest request, Long instructorId);
 
-    CourseDto updateCourse(Long courseId, Long instructorId, CreateCourseRequest request);
+    CourseDto updateCourse(Long courseId, Long instructorId, CourseRequest request);
+
+    CourseDto patchCourse(Long courseId, Long instructorId, CourseRequest request);
 
 }

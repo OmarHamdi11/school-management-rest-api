@@ -2,12 +2,13 @@ package com.springboot.school_management.controller;
 
 
 import com.springboot.school_management.payload.CourseDto;
-import com.springboot.school_management.payload.CreateCourseRequest;
+import com.springboot.school_management.payload.CourseRequest;
 import com.springboot.school_management.response.ApiResponse;
 import com.springboot.school_management.response.PageResponse;
 import com.springboot.school_management.service.CourseService;
 import com.springboot.school_management.utils.AppConstants;
 import com.springboot.school_management.utils.SecurityUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public class CourseController {
 
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @PostMapping
-    public ResponseEntity<ApiResponse<CourseDto>> createCourse(@RequestBody CreateCourseRequest request){
+    public ResponseEntity<ApiResponse<CourseDto>> createCourse(@Valid @RequestBody CourseRequest request){
 
         Long instructorId = securityUtils.getCurrentUserId();
 
@@ -66,7 +67,7 @@ public class CourseController {
     @PutMapping("{id}")
     public ResponseEntity<ApiResponse<CourseDto>> updateCourse(
             @PathVariable(name = "id") Long courseId,
-            @RequestBody CreateCourseRequest request
+            @Valid @RequestBody CourseRequest request
     ){
         Long instructorId = securityUtils.getCurrentUserId();
         CourseDto updatedCourse = courseService.updateCourse(courseId, instructorId, request);
@@ -77,5 +78,18 @@ public class CourseController {
 
     }
 
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @PatchMapping("{id}")
+    public ResponseEntity<ApiResponse<CourseDto>> patchCourse(
+            @PathVariable(name = "id") Long courseId,
+            @RequestBody CourseRequest request
+    ){
+        Long instructorId = securityUtils.getCurrentUserId();
+        CourseDto updatedCourse = courseService.patchCourse(courseId, instructorId, request);
 
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Course Updated Successfully", updatedCourse));
+
+    }
 }
