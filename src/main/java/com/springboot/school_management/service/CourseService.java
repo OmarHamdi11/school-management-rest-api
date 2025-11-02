@@ -18,4 +18,6 @@ public interface CourseService {
 
     CourseDto patchCourse(Long courseId, Long instructorId, CourseRequest request);
 
+    String deleteCourse(Long courseId, Long instructorId);
+
 }

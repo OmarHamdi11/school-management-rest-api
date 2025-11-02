@@ -131,6 +131,24 @@ public class CourseServiceImpl implements CourseService {
         return mapToDto(updatedCourse);
     }
 
+    @Override
+    @Transactional
+    public String deleteCourse(Long courseId, Long instructorId) {
+
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new ResourceNotFoundException("Course", "id", courseId)
+        );
+
+        if (!course.getInstructor().getId().equals(instructorId)){
+            throw new AccessDeniedException("You are not authorized to update this course");
+        }
+
+        courseRepository.deleteById(courseId);
+
+
+        return "Course Deleted Successfully";
+    }
+
 
     private CourseDto mapToDto(Course course) {
         CourseDto dto = modelMapper.map(course, CourseDto.class);

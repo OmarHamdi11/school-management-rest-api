@@ -29,6 +29,8 @@ public class CourseController {
         this.securityUtils = securityUtils;
     }
 
+    // ============== Public Endpoints ==============
+
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<CourseDto>>> getAllCourses(
             @RequestParam(value = "pageNo" , defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
@@ -48,6 +50,8 @@ public class CourseController {
 
         return ResponseEntity.ok(response);
     }
+
+    // ============== Instructor Endpoints ==============
 
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @PostMapping
@@ -92,4 +96,32 @@ public class CourseController {
                 .body(ApiResponse.success("Course Updated Successfully", updatedCourse));
 
     }
+
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @DeleteMapping("{id}")
+    public ResponseEntity<ApiResponse<String>> deleteCourse(
+            @PathVariable(name = "id") Long courseId
+    ){
+        Long instructorId = securityUtils.getCurrentUserId();
+        courseService.deleteCourse(courseId,instructorId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Course Deleted Successfully", null));
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
