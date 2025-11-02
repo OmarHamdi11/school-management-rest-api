@@ -187,12 +187,24 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
+    @Override
+    @Transactional
+    public void unenrollFromCourse(Long courseId, Long studentId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new ResourceNotFoundException("Course", "id", courseId)
+        );
 
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                () -> new ResourceNotFoundException("Student", "id", studentId)
+        );
 
+        if (!student.getEnrolledCourses().contains(course)){
+            throw new RuntimeException("You are not enrolled in this course");
+        }
 
-
-
-
+        student.unenrollFromCourse(course);
+        studentRepository.save(student);
+    }
 
 
     private CourseDto mapToDto(Course course) {

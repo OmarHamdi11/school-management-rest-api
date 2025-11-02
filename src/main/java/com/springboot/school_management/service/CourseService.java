@@ -32,5 +32,7 @@ public interface CourseService {
 
     void enrollInCourse(Long courseId, Long studentId);
 
+    void unenrollFromCourse(Long courseId, Long studentId);
+
 
 }

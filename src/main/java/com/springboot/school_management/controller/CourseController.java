@@ -145,7 +145,15 @@ public class CourseController {
     }
 
 
-
+    @PreAuthorize("hasRole('STUDENT')")
+    @DeleteMapping("/{id}/unenroll")
+    public ResponseEntity<ApiResponse<String>> unenrollFromCourse(@PathVariable(name = "id") Long courseId){
+        Long studentId = securityUtils.getCurrentUserId();
+        courseService.unenrollFromCourse(courseId, studentId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Successfully unenrolled from the course", null));
+    }
 
 
 
