@@ -36,4 +36,6 @@ public interface CourseService {
 
     List<CourseDto> getStudentEnrollments(Long studentId);
 
+    String isStudentEnrolled(Long courseId, Long studentId);
+
 }

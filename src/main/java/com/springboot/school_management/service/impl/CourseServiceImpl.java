@@ -219,6 +219,20 @@ public class CourseServiceImpl implements CourseService {
                 .toList();
     }
 
+    @Override
+    public String isStudentEnrolled(Long courseId, Long studentId) {
+
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                () -> new ResourceNotFoundException("Student", "id", studentId)
+        );
+
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new ResourceNotFoundException("Course", "id", courseId)
+        );
+
+        return student.getEnrolledCourses().contains(course)? "Enrolled" : "Not Enrolled";
+    }
+
 
     private CourseDto mapToDto(Course course) {
         CourseDto dto = modelMapper.map(course, CourseDto.class);

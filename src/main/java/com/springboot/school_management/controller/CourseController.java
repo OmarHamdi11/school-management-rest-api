@@ -167,7 +167,16 @@ public class CourseController {
     }
 
 
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/{id}/check-enrollment")
+    public ResponseEntity<ApiResponse<String>> checkEnrollmentStatus(@PathVariable(name = "id") Long courseId){
+        Long studentId = securityUtils.getCurrentUserId();
+        String status = courseService.isStudentEnrolled(courseId, studentId);
 
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Enrollments status retrieved", status));
+    }
 
 
 }
