@@ -132,10 +132,17 @@ public class CourseController {
     }
 
 
+    // ============== Student Endpoints ==============
 
-
-    // ============== Instructor Endpoints ==============
-
+    @PreAuthorize("hasRole('STUDENT')")
+    @PostMapping("/{id}/enroll")
+    public ResponseEntity<ApiResponse<String>> enrollInCourse(@PathVariable(name = "id") Long courseId){
+        Long studentId = securityUtils.getCurrentUserId();
+        courseService.enrollInCourse(courseId, studentId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Successfully enrolled in the course", null));
+    }
 
 
 

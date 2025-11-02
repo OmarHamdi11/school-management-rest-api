@@ -2,6 +2,7 @@ package com.springboot.school_management.service.impl;
 
 import com.springboot.school_management.entity.Course;
 import com.springboot.school_management.entity.Instructor;
+import com.springboot.school_management.entity.Student;
 import com.springboot.school_management.exception.ResourceNotFoundException;
 import com.springboot.school_management.payload.CourseDto;
 import com.springboot.school_management.payload.CourseRequest;
@@ -42,6 +43,9 @@ public class CourseServiceImpl implements CourseService {
         this.modelMapper = modelMapper;
     }
 
+
+    // ============== Public Functions ==============
+
     @Override
     public PageResponse<CourseDto> getAllCourses(int pageNo, int pageSize, String sortBy, String sortDir) {
 
@@ -69,6 +73,8 @@ public class CourseServiceImpl implements CourseService {
         return mapToDto(course);
     }
 
+
+    // ============== Instructor Functions ==============
 
     @Override
     @Transactional
@@ -114,6 +120,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public CourseDto patchCourse(Long courseId, Long instructorId, CourseRequest request) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
@@ -156,6 +163,36 @@ public class CourseServiceImpl implements CourseService {
 
         return courses.stream().map(this::mapToDto).toList();
     }
+
+
+    // ============== Student Functions ==============
+
+    @Override
+    @Transactional
+    public void enrollInCourse(Long courseId, Long studentId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new ResourceNotFoundException("Course", "id", courseId)
+        );
+
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                () -> new ResourceNotFoundException("Student", "id", studentId)
+        );
+
+        if (student.getEnrolledCourses().contains(course)){
+            throw new RuntimeException("You are already enrolled in this course");
+        }
+
+        student.enrollInCourse(course);
+        studentRepository.save(student);
+
+    }
+
+
+
+
+
+
+
 
 
     private CourseDto mapToDto(Course course) {

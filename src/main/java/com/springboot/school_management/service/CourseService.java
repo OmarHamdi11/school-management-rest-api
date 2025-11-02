@@ -5,7 +5,6 @@ import com.springboot.school_management.payload.CourseRequest;
 import com.springboot.school_management.response.PageResponse;
 
 import java.util.List;
-import java.util.Map;
 
 public interface CourseService {
 
@@ -30,6 +29,8 @@ public interface CourseService {
 
 
     // ============== Student Functions ==============
+
+    void enrollInCourse(Long courseId, Long studentId);
 
 
 }
