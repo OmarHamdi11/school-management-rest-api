@@ -123,11 +123,11 @@ public class CourseController {
     @GetMapping("/my-courses")
     public ResponseEntity<ApiResponse<List<CourseDto>>> getMyCourses(){
         Long instructorId = securityUtils.getCurrentUserId();
-        List<CourseDto> myCourses = courseService.getMyCourses(instructorId);
+        List<CourseDto> instructorCourses = courseService.getInstructorCourses(instructorId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.success("Courses retrieved successfully", myCourses));
+                .body(ApiResponse.success("Courses retrieved successfully", instructorCourses));
 
     }
 
@@ -155,7 +155,16 @@ public class CourseController {
                 .body(ApiResponse.success("Successfully unenrolled from the course", null));
     }
 
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/my-enrollments")
+    public ResponseEntity<ApiResponse<List<CourseDto>>> getStudentEnrollments(){
+        Long studentId = securityUtils.getCurrentUserId();
+        List<CourseDto> studentEnrollments = courseService.getStudentEnrollments(studentId);
 
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Enrollments retrieved successfully", studentEnrollments));
+    }
 
 
 

@@ -25,7 +25,7 @@ public interface CourseService {
 
     void deleteCourse(Long courseId, Long instructorId);
 
-    List<CourseDto> getMyCourses(Long instructorId);
+    List<CourseDto> getInstructorCourses(Long instructorId);
 
 
     // ============== Student Functions ==============
@@ -34,5 +34,6 @@ public interface CourseService {
 
     void unenrollFromCourse(Long courseId, Long studentId);
 
+    List<CourseDto> getStudentEnrollments(Long studentId);
 
 }

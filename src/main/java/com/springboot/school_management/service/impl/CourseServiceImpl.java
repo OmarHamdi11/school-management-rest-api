@@ -157,7 +157,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseDto> getMyCourses(Long instructorId) {
+    public List<CourseDto> getInstructorCourses(Long instructorId) {
 
         List<Course> courses = courseRepository.findByInstructorId(instructorId);
 
@@ -204,6 +204,19 @@ public class CourseServiceImpl implements CourseService {
 
         student.unenrollFromCourse(course);
         studentRepository.save(student);
+    }
+
+    @Override
+    public List<CourseDto> getStudentEnrollments(Long studentId) {
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                () -> new ResourceNotFoundException("Student", "id", studentId)
+        );
+
+        return student
+                .getEnrolledCourses()
+                .stream()
+                .map(this::mapToDto)
+                .toList();
     }
 
 
