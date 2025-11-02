@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
 
 @Service
@@ -133,7 +134,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public String deleteCourse(Long courseId, Long instructorId) {
+    public void deleteCourse(Long courseId, Long instructorId) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(
                 () -> new ResourceNotFoundException("Course", "id", courseId)
@@ -146,7 +147,14 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.deleteById(courseId);
 
 
-        return "Course Deleted Successfully";
+    }
+
+    @Override
+    public List<CourseDto> getMyCourses(Long instructorId) {
+
+        List<Course> courses = courseRepository.findByInstructorId(instructorId);
+
+        return courses.stream().map(this::mapToDto).toList();
     }
 
 

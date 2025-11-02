@@ -4,13 +4,19 @@ import com.springboot.school_management.payload.CourseDto;
 import com.springboot.school_management.payload.CourseRequest;
 import com.springboot.school_management.response.PageResponse;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CourseService {
 
+    // ============== Public Functions ==============
+
     PageResponse<CourseDto> getAllCourses(int pageNo, int pageSize, String sortBy, String sortDir);
 
     CourseDto getCourseById(Long id);
+
+
+    // ============== Instructor Functions ==============
 
     CourseDto createCourse(CourseRequest request, Long instructorId);
 
@@ -18,6 +24,12 @@ public interface CourseService {
 
     CourseDto patchCourse(Long courseId, Long instructorId, CourseRequest request);
 
-    String deleteCourse(Long courseId, Long instructorId);
+    void deleteCourse(Long courseId, Long instructorId);
+
+    List<CourseDto> getMyCourses(Long instructorId);
+
+
+    // ============== Student Functions ==============
+
 
 }

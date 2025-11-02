@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/courses")
@@ -28,6 +30,9 @@ public class CourseController {
         this.courseService = courseService;
         this.securityUtils = securityUtils;
     }
+
+
+
 
     // ============== Public Endpoints ==============
 
@@ -50,6 +55,9 @@ public class CourseController {
 
         return ResponseEntity.ok(response);
     }
+
+
+
 
     // ============== Instructor Endpoints ==============
 
@@ -111,8 +119,22 @@ public class CourseController {
 
     }
 
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @GetMapping("/my-courses")
+    public ResponseEntity<ApiResponse<List<CourseDto>>> getMyCourses(){
+        Long instructorId = securityUtils.getCurrentUserId();
+        List<CourseDto> myCourses = courseService.getMyCourses(instructorId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Courses retrieved successfully", myCourses));
+
+    }
 
 
+
+
+    // ============== Instructor Endpoints ==============
 
 
 
