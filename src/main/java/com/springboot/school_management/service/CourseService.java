@@ -12,4 +12,6 @@ public interface CourseService {
 
     CourseDto createCourse(CreateCourseRequest request, Long instructorId);
 
+    CourseDto updateCourse(Long courseId, Long instructorId, CreateCourseRequest request);
+
 }

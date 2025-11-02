@@ -62,5 +62,20 @@ public class CourseController {
 
     }
 
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @PutMapping("{id}")
+    public ResponseEntity<ApiResponse<CourseDto>> updateCourse(
+            @PathVariable(name = "id") Long courseId,
+            @RequestBody CreateCourseRequest request
+    ){
+        Long instructorId = securityUtils.getCurrentUserId();
+        CourseDto updatedCourse = courseService.updateCourse(courseId, instructorId, request);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Course Updated Successfully", updatedCourse));
+
+    }
+
 
 }

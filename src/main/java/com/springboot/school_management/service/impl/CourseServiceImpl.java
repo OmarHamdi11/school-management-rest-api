@@ -10,12 +10,14 @@ import com.springboot.school_management.repository.InstructorRepository;
 import com.springboot.school_management.repository.StudentRepository;
 import com.springboot.school_management.response.PageResponse;
 import com.springboot.school_management.service.CourseService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 
@@ -67,6 +69,7 @@ public class CourseServiceImpl implements CourseService {
 
 
     @Override
+    @Transactional
     public CourseDto createCourse(CreateCourseRequest request, Long instructorId) {
         Instructor instructor = instructorRepository.findById(instructorId).orElseThrow(
                 () -> new RuntimeException("Instructor Not Found")
@@ -83,6 +86,29 @@ public class CourseServiceImpl implements CourseService {
         Course savedCourse = courseRepository.save(course);
 
         return mapToDto(savedCourse);
+    }
+
+    @Override
+    @Transactional
+    public CourseDto updateCourse(Long courseId, Long instructorId, CreateCourseRequest request) {
+
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new ResourceNotFoundException("Course", "id", courseId)
+        );
+
+        if (!course.getInstructor().getId().equals(instructorId)){
+            throw new AccessDeniedException("You are not authorized to update this course");
+        }
+
+        course.setName(request.getName());
+        course.setDescription(request.getDescription());
+        course.setPrice(request.getPrice());
+        course.setDuration(request.getDuration());
+        course.setLevel(request.getLevel());
+
+        Course updatedCourse = courseRepository.save(course);
+
+        return mapToDto(updatedCourse);
     }
 
 
