@@ -131,6 +131,11 @@ public class CourseController {
 
     }
 
+    // GET /api/courses/{id}/students
+//    @PreAuthorize("hasRole('INSTRUCTOR')")
+//    @GetMapping("/{courseId}/students")
+//    public ResponseEntity<ApiResponse<List<StudentDto>>> getCourseStudents(@PathVariable Long courseId)
+
 
     // ============== Student Endpoints ==============
 
