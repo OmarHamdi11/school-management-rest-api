@@ -26,6 +26,9 @@ public class Student extends User {
     )
     private List<Course> enrolledCourses = new ArrayList<>();
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
     // Helper method
     public void enrollInCourse(Course course) {
         this.enrolledCourses.add(course);

@@ -42,4 +42,7 @@ public class Course {
     )
     private List<Student> enrolledStudents = new ArrayList<>();
 
+    @OneToMany(mappedBy = "course")
+    private List<Review> reviews = new ArrayList<>();
+
 }
