@@ -23,11 +23,7 @@ public interface ReviewService {
 
     PageResponse<ReviewDto> getCourseReviews(Long courseId, int pageNo, int pageSize, String sortBy, String sortDir);
 
-    //
-//    /**
-//     * جلب مراجعات طالب معين
-//     */
-//    List<ReviewDto> getStudentReviews(Long studentId);
+    List<ReviewDto> getStudentReviews(Long studentId);
 //
 //    /**
 //     * جلب مراجعة طالب لكورس معين

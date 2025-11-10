@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
@@ -135,6 +137,17 @@ public class ReviewServiceImpl implements ReviewService {
         Page<ReviewDto> reviewDtoPage = reviewPage.map(this::mapToDto);
 
         return new PageResponse<>(reviewDtoPage);
+    }
+
+    @Override
+    public List<ReviewDto> getStudentReviews(Long studentId) {
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                () -> new ResourceNotFoundException("Student", "id", studentId)
+        );
+
+        List<Review> reviews = reviewRepository.findByStudentId(student.getId());
+
+        return reviews.stream().map(this::mapToDto).toList();
     }
 
 
