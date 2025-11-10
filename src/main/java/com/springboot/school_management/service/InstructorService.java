@@ -1,11 +1,11 @@
 package com.springboot.school_management.service;
 
+import com.springboot.school_management.payload.instructor.InstructorDto;
+import com.springboot.school_management.response.PageResponse;
+
 public interface InstructorService {
     // ========== Public Methods ==========
 
-    /**
-     * جلب كل المدرسين
-     */
     PageResponse<InstructorDto> getAllInstructors(int pageNo, int pageSize, String sortBy, String sortDir);
 
 //    /**
