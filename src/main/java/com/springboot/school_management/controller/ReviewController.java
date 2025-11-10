@@ -57,6 +57,23 @@ public class ReviewController {
                 .body(ApiResponse.success("Reviews fetched Successfully", response));
     }
 
+    @GetMapping("/course/{courseId}/average")
+    public ResponseEntity<ApiResponse<Double>> getAverageRating(@PathVariable(name = "courseId") Long courseId){
+        Double avgRating = reviewService.getAverageRating(courseId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Average rating calculated Successfully", avgRating));
+    }
+
+    @GetMapping("/course/{courseId}/count")
+    public  ResponseEntity<ApiResponse<Long>> getReviewsCount(@PathVariable(name = "courseId") Long courseId){
+        Long count = reviewService.getReviewsCount(courseId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Reviews Count Retried Successfully", count));
+    }
 
 
     // ============== Student Endpoints ==============
@@ -109,6 +126,30 @@ public class ReviewController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.success("Student reviews fetched Successfully", response));
+    }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/my-reviews/course/{courseId}")
+    public ResponseEntity<ApiResponse<ReviewDto>> getMyReviewForCourse(
+            @PathVariable(name = "courseId") Long courseId
+    ){
+        Long studentId = securityUtils.getCurrentUserId();
+        ReviewDto response = reviewService.getStudentReviewForCourse(studentId,courseId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Student review for course fetched Successfully", response));
+    }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("check/course/{courseId}")
+    public ResponseEntity<ApiResponse<Boolean>> checkIfReviewed(@PathVariable(name = "courseId") Long courseId){
+        Long studentId = securityUtils.getCurrentUserId();
+        Boolean response = reviewService.hasReviewed(studentId,courseId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.success("Review status checked", response));
     }
 
 

@@ -150,6 +150,54 @@ public class ReviewServiceImpl implements ReviewService {
         return reviews.stream().map(this::mapToDto).toList();
     }
 
+    @Override
+    public ReviewDto getStudentReviewForCourse(Long studentId, Long courseId) {
+        if (!studentRepository.existsById(studentId)){
+            throw new ResourceNotFoundException("Student", "id", studentId);
+        }
+
+        if (!courseRepository.existsById(courseId)){
+            throw new ResourceNotFoundException("Course", "id", courseId);
+        }
+
+        Review review = reviewRepository.findByStudentIdAndCourseId(studentId,courseId).orElseThrow(
+                () -> new RuntimeException("Review not found")
+        );
+
+        return mapToDto(review);
+    }
+
+    @Override
+    public Double getAverageRating(Long courseId) {
+        if (!courseRepository.existsById(courseId)){
+            throw new ResourceNotFoundException("Course", "id", courseId);
+        }
+
+        return reviewRepository.findByAverageRatingByCourseId(courseId);
+    }
+
+    @Override
+    public Long getReviewsCount(Long courseId) {
+        if (!courseRepository.existsById(courseId)){
+            throw new ResourceNotFoundException("Course", "id", courseId);
+        }
+
+        return reviewRepository.countByCourseId(courseId);
+    }
+
+    @Override
+    public boolean hasReviewed(Long studentId, Long courseId) {
+        if (!studentRepository.existsById(studentId)){
+            throw new ResourceNotFoundException("Student", "id", studentId);
+        }
+
+        if (!courseRepository.existsById(courseId)){
+            throw new ResourceNotFoundException("Course", "id", courseId);
+        }
+
+        return reviewRepository.existsByStudentIdAndCourseId(studentId,courseId);
+    }
+
 
     private ReviewDto mapToDto(Review review){
         ReviewDto reviewDto = modelMapper.map(review, ReviewDto.class);

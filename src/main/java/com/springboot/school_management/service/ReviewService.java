@@ -24,27 +24,15 @@ public interface ReviewService {
     PageResponse<ReviewDto> getCourseReviews(Long courseId, int pageNo, int pageSize, String sortBy, String sortDir);
 
     List<ReviewDto> getStudentReviews(Long studentId);
-//
-//    /**
-//     * جلب مراجعة طالب لكورس معين
-//     */
-//    ReviewDto getStudentReviewForCourse(Long studentId, Long courseId);
+
+    ReviewDto getStudentReviewForCourse(Long studentId, Long courseId);
 //
 //    // ========== Statistics ==========
-//
-//    /**
-//     * حساب متوسط التقييم لكورس
-//     */
-//    Double getAverageRating(Long courseId);
-//
-//    /**
-//     * عدد المراجعات لكورس
-//     */
-//    Long getReviewsCount(Long courseId);
-//
-//    /**
-//     * التحقق من وجود مراجعة
-//     */
-//    boolean hasReviewed(Long studentId, Long courseId);
+
+    Double getAverageRating(Long courseId);
+
+    Long getReviewsCount(Long courseId);
+
+    boolean hasReviewed(Long studentId, Long courseId);
 
 }
