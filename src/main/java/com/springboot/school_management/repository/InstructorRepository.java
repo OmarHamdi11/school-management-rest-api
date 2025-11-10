@@ -10,6 +10,8 @@ public interface InstructorRepository extends JpaRepository<Instructor,Long> {
 
     Optional<Instructor> findByUsername(String username);
 
-    List<Instructor> findBySpecialization(String specialization);
+    boolean existsByUsername(String username);
+
+    List<Instructor> findBySpecializationContainingIgnoreCase(String specialization);
 
 }
