@@ -10,9 +10,14 @@ import com.springboot.school_management.payload.ReviewUpdateRequest;
 import com.springboot.school_management.repository.CourseRepository;
 import com.springboot.school_management.repository.ReviewRepository;
 import com.springboot.school_management.repository.StudentRepository;
+import com.springboot.school_management.response.PageResponse;
 import com.springboot.school_management.service.ReviewService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -112,6 +117,24 @@ public class ReviewServiceImpl implements ReviewService {
         );
 
         return mapToDto(review);
+    }
+
+    @Override
+    public PageResponse<ReviewDto> getCourseReviews(Long courseId, int pageNo, int pageSize, String sortBy, String sortDir) {
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new ResourceNotFoundException("Course", "id", courseId)
+        );
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNo,pageSize,sort);
+
+        Page<Review> reviewPage = reviewRepository.findByCourseId(course.getId(),pageable);
+
+        Page<ReviewDto> reviewDtoPage = reviewPage.map(this::mapToDto);
+
+        return new PageResponse<>(reviewDtoPage);
     }
 
 

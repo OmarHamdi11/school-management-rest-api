@@ -18,14 +18,12 @@ public interface ReviewService {
     void deleteReview(Long reviewId, Long studentId);
 
     ReviewDto getReviewById(Long reviewId);
-//
-//    // ========== Query Operations ==========
-//
-//    /**
-//     * جلب مراجعات كورس معين (مع pagination)
-//     */
-//    PageResponse<ReviewDto> getCourseReviews(Long courseId, int pageNo, int pageSize, String sortBy, String sortDir);
-//
+
+    // ========== Query Operations ==========
+
+    PageResponse<ReviewDto> getCourseReviews(Long courseId, int pageNo, int pageSize, String sortBy, String sortDir);
+
+    //
 //    /**
 //     * جلب مراجعات طالب معين
 //     */
