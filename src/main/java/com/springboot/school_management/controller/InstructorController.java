@@ -97,7 +97,7 @@ public class InstructorController {
     public ResponseEntity<ApiResponse<InstructorProfileDto>> updateProfile(
             @Valid @RequestBody UpdateInstructorProfileRequest request
     ){
-        Long instructorId = securityUtils.getCurrentUserId();;
+        Long instructorId = securityUtils.getCurrentUserId();
         InstructorProfileDto response = instructorService.updateProfile(instructorId,request);
 
         return ResponseEntity

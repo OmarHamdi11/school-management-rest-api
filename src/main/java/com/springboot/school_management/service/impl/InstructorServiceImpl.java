@@ -101,7 +101,7 @@ public class InstructorServiceImpl implements InstructorService {
         instructor.setSpecialization(request.getSpecialization());
         Instructor savedInstructor = instructorRepository.save(instructor);
 
-        return mapToInstructorProfile(instructor);
+        return mapToInstructorProfile(savedInstructor);
     }
 
     @Override
