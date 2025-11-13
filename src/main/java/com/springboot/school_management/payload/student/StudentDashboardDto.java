@@ -20,5 +20,4 @@ public class StudentDashboardDto {
     private Double averageRating;
     private List<CourseDto> enrolledCourses;
     private List<ReviewDto> recentReviews;
-    private List<CourseDto> recommendedCourses;
 }
